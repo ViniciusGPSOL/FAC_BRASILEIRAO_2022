@@ -6,7 +6,7 @@ O trabalho final consiste na implementação de uma tabela dinâmica para o camp
 
 ## Entrega
 
-O trabalho final deve ser entregue pelo Moogle até o dia 08/08/2024.
+O trabalho final deve ser entregue pelo Moodle até o dia 08/08/2024.
 
 ## Apresentação
 
