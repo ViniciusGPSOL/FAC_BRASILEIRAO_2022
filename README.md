@@ -6,11 +6,11 @@ O trabalho final consiste na implementação de uma tabela dinâmica para o camp
 
 ## Entrega
 
-O trabalho final deve ser entregue pelo Google até o dia XX/XX/XXXX.
+O trabalho final deve ser entregue pelo Moodle até o dia 08/08/2024.
 
 ## Apresentação
 
-O trabalho será apresentado ao professor na aula do dia XX/XX/XXXX.
+O trabalho será apresentado ao professor na aula do dia 08/08/2024.
 
 ## Funcionalidades Obrigatórias
 
@@ -41,4 +41,4 @@ O trabalho será apresentado ao professor na aula do dia XX/XX/XXXX.
 
 ### Dados de Teste
 
-- Teste utilizando os dados do campeonato brasileiro de 2023.
+- Teste utilizando os dados do campeonato brasileiro de 2022.
