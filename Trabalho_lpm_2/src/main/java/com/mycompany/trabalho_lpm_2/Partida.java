@@ -4,28 +4,44 @@
  */
 package com.mycompany.trabalho_lpm_2;
 
-/**
- *
- * @author Vinicius
- */
 public class Partida {
     private String data;
-    private String timeCasa;
-    private String timeVisitante;
+    private Time timeCasa;
+    private Time timeVisitante;
     private int golsTimeCasa;
     private int golsTimeVisitante;
 
     public Partida(String data, Time timeCasa, Time timeVisitante, int golsTimeCasa, int golsTimeVisitante) {
         this.data = data;
-        this.timeCasa = timeCasa.getNome();
-        this.timeVisitante = timeVisitante.getNome();
+        this.timeCasa = timeCasa;
+        this.timeVisitante = timeVisitante;
         this.golsTimeCasa = golsTimeCasa;
         this.golsTimeVisitante = golsTimeVisitante;
     }
 
+    public String getData() {
+        return data;
+    }
+
+    public Time getTimeCasa() {
+        return timeCasa;
+    }
+
+    public Time getTimeVisitante() {
+        return timeVisitante;
+    }
+
+    public int getGolsTimeCasa() {
+        return golsTimeCasa;
+    }
+
+    public int getGolsTimeVisitante() {
+        return golsTimeVisitante;
+    }
+
     @Override
     public String toString() {
-        return String.format("Data: %s, Time Casa: %s, Time Visitante: %s, Gols Time Casa: %d, Gols Time Visitante: %d",
-            data, timeCasa, timeVisitante, golsTimeCasa, golsTimeVisitante);
+        return String.format("Data: %s, %s x %s, Gols Time Casa: %d, Gols Time Visitante: %d",
+            data, timeCasa.getNome(), timeVisitante.getNome(), golsTimeCasa, golsTimeVisitante);
     }
 }

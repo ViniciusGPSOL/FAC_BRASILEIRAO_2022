@@ -10,68 +10,145 @@ import com.opencsv.exceptions.CsvException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Scanner;
 
 public class Trabalho_lpm_2 {
 
     public static void main(String[] args) {
-        String csvFile = "C:\\Users\\Vinicius\\FAC_BRASILEIRAO_2022\\brasileirao_2022.csv"; // Caminho do arquivo CSV
-        List<Partida> partidas = new ArrayList<>();
-        List<Time> times = new ArrayList<>();
+        TimeManager timeManager = new TimeManager();
+        carregarDadosCSV(timeManager, "C:\\Users\\Vinicius\\FAC_BRASILEIRAO_2022\\brasileirao_2022.csv");
 
-        try (CSVReader reader = new CSVReader(new FileReader(csvFile))) {
-            String[] linha;
+        // Criação do relatório
+        Relatorio relatorio = new RelatorioImpl(timeManager);
 
-            // Ignora o cabeçalho
-            reader.readNext();
+        // Menu interativo
+        Scanner scanner = new Scanner(System.in);
+        int opcao;
 
-            while ((linha = reader.readNext()) != null) {
-                if (linha.length >= 14) {
-                    try {
-                        // Cria os objetos Time
-                        Time timeCasa = new Time(linha[7], "", ""); // Ignorando cidade e estado
-                        Time timeVisitante = new Time(linha[8], "", ""); // Ignorando cidade e estado
+        do {
+            System.out.println("\nMenu:");
+            System.out.println("1. Imprimir classificação completa");
+            System.out.println("2. Imprimir lista de todas as partidas");
+            System.out.println("3. Imprimir partidas por time");
+            System.out.println("4. Exibir todos os times");
+            System.out.println("5. Adicionar novo time");
+            System.out.println("6. Editar um time existente");
+            System.out.println("7. Remover um time");
+            System.out.println("8. Sair");
+            System.out.print("Escolha uma opção: ");
+            opcao = scanner.nextInt();
+            scanner.nextLine();  // Limpar o buffer
 
-                        // Adiciona os times à lista se ainda não estiverem presentes
-                        if (!times.contains(timeCasa)) {
-                            times.add(timeCasa);
-                        }
-                        if (!times.contains(timeVisitante)) {
-                            times.add(timeVisitante);
-                        }
+            switch (opcao) {
+                case 1:
+                    relatorio.imprimirClassificacaoCompleta();
+                    break;
+                case 2:
+                    relatorio.imprimirListaTodasAsPartidas();
+                    break;
+                case 3:
+                    System.out.print("Digite o nome do time: ");
+                    String nomeTime = scanner.nextLine();
+                    relatorio.imprimirPartidasPorTime(nomeTime);
+                    break;
+                case 4:
+                    timeManager.exibirTimes();
+                    break;
+                case 5:
+                    adicionarTime(scanner, timeManager);
+                    break;
+                case 6:
+                    editarTime(scanner, timeManager);
+                    break;
+                case 7:
+                    removerTime(scanner, timeManager);
+                    break;
+                case 8:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+        } while (opcao != 8);
 
-                        // Cria o objeto Partida com as informações necessárias
-                        Partida partida = new Partida(
-                            linha[1], // Data
-                            timeCasa,
-                            timeVisitante,
-                            Integer.parseInt(linha[12]), // Gols Time da casa
-                            Integer.parseInt(linha[13])  // Gols Time visitante
-                        );
-                        partidas.add(partida);
-                    } catch (NumberFormatException e) {
-                        System.err.println("Erro ao converter número: " + e.getMessage());
-                    }
+        scanner.close();
+    }
+
+private static void carregarDadosCSV(TimeManager timeManager, String csvFile) {
+    try (CSVReader reader = new CSVReader(new FileReader(csvFile))) {
+        String[] linha;
+
+        // Ignora o cabeçalho
+        reader.readNext();
+
+        while ((linha = reader.readNext()) != null) {
+            if (linha.length >= 14) {
+                try {
+                    // Cria os objetos Time
+                    Time timeCasa = new Time(linha[7], "", ""); // Ignorando cidade e estado
+                    Time timeVisitante = new Time(linha[8], "", ""); // Ignorando cidade e estado
+
+                    // Adiciona os times ao TimeManager
+                    timeManager.adicionarTime(timeCasa);
+                    timeManager.adicionarTime(timeVisitante);
+
+                    // Cria o objeto Partida com as informações necessárias
+                    Partida partida = new Partida(
+                        linha[1], // Data
+                        timeCasa,
+                        timeVisitante,
+                        Integer.parseInt(linha[12]), // Gols Time da casa
+                        Integer.parseInt(linha[13])  // Gols Time visitante
+                    );
+
+                    // Adiciona a partida ao TimeManager
+                    timeManager.adicionarPartida(partida);
+
+                    // Atualiza a classificação com base na partida
+                    timeManager.atualizarClassificacao(partida);
+                } catch (NumberFormatException e) {
+                    System.err.println("Erro ao converter número: " + e.getMessage());
                 }
             }
-        } catch (IOException | CsvException e) {
-            e.printStackTrace(); // Imprime o stack trace para depuração
         }
-
-        // Exibe as partidas
-        for (Partida partida : partidas) {
-            System.out.println(partida);
-        }
-
-        // Exibe os times
-        System.out.println("\nTimes:");
-        for (Time time : times) {
-            System.out.println(time.getNome()); // Corrigido para obter apenas o nome do time
-        }
+    } catch (IOException | CsvException e) {
+        e.printStackTrace(); // Imprime o stack trace para depuração
     }
 }
 
+    private static void adicionarTime(Scanner scanner, TimeManager timeManager) {
+        System.out.print("Digite o nome do novo time: ");
+        String nome = scanner.nextLine();
+        System.out.print("Digite a cidade do novo time: ");
+        String cidade = scanner.nextLine();
+        System.out.print("Digite o estado do novo time: ");
+        String estado = scanner.nextLine();
+        Time novoTime = new Time(nome, cidade, estado);
+        timeManager.adicionarTime(novoTime);
+    }
 
+    private static void editarTime(Scanner scanner, TimeManager timeManager) {
+        System.out.print("Digite o nome do time a ser editado: ");
+        String nome = scanner.nextLine();
+        Time time = timeManager.buscarTime(nome);
+        if (time != null) {
+            System.out.print("Digite o novo nome: ");
+            String novoNome = scanner.nextLine();
+            System.out.print("Digite a nova cidade: ");
+            String novaCidade = scanner.nextLine();
+            System.out.print("Digite o novo estado: ");
+            String novoEstado = scanner.nextLine();
+            timeManager.editarTime(nome, novoNome, novaCidade, novoEstado);
+        } else {
+            System.out.println("Time não encontrado.");
+        }
+    }
 
+    private static void removerTime(Scanner scanner, TimeManager timeManager) {
+        System.out.print("Digite o nome do time a ser removido: ");
+        String nome = scanner.nextLine();
+        timeManager.removerTime(nome);
+    }
+}

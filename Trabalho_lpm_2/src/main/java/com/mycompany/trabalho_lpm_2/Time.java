@@ -4,23 +4,19 @@
  */
 package com.mycompany.trabalho_lpm_2;
 
-/**
- *
- * @author Vinicius
- */
+import java.util.Objects;
+
 public class Time {
     private String nome;
     private String cidade;
     private String estado;
 
-    // Construtor
     public Time(String nome, String cidade, String estado) {
         this.nome = nome;
         this.cidade = cidade;
         this.estado = estado;
     }
 
-    // Getters e Setters
     public String getNome() {
         return nome;
     }
@@ -43,6 +39,21 @@ public class Time {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Time time = (Time) o;
+        return nome.equals(time.nome) &&
+               cidade.equals(time.cidade) &&
+               estado.equals(time.estado);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, cidade, estado);
     }
 
     @Override
