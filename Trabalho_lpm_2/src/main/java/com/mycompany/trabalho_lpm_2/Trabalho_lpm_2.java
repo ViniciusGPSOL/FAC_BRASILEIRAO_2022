@@ -35,7 +35,9 @@ public class Trabalho_lpm_2 {
             System.out.println("5. Adicionar novo time");
             System.out.println("6. Editar um time existente");
             System.out.println("7. Remover um time");
-            System.out.println("8. Sair");
+            System.out.println("8. Adicionar nova partida");
+            System.out.println("9. Remover uma partida");
+            System.out.println("10. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
             scanner.nextLine();  // Limpar o buffer
@@ -65,58 +67,64 @@ public class Trabalho_lpm_2 {
                     removerTime(scanner, timeManager);
                     break;
                 case 8:
+                    adicionarPartida(scanner, timeManager);
+                    break;
+                case 9:
+                    removerPartida(scanner, timeManager);
+                    break;
+                case 10:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
                     break;
             }
-        } while (opcao != 8);
+        } while (opcao != 10);
 
         scanner.close();
     }
 
-private static void carregarDadosCSV(TimeManager timeManager, String csvFile) {
-    try (CSVReader reader = new CSVReader(new FileReader(csvFile))) {
-        String[] linha;
+    private static void carregarDadosCSV(TimeManager timeManager, String csvFile) {
+        try (CSVReader reader = new CSVReader(new FileReader(csvFile))) {
+            String[] linha;
 
-        // Ignora o cabeçalho
-        reader.readNext();
+            // Ignora o cabeçalho
+            reader.readNext();
 
-        while ((linha = reader.readNext()) != null) {
-            if (linha.length >= 14) {
-                try {
-                    // Cria os objetos Time
-                    Time timeCasa = new Time(linha[7], "", ""); // Ignorando cidade e estado
-                    Time timeVisitante = new Time(linha[8], "", ""); // Ignorando cidade e estado
+            while ((linha = reader.readNext()) != null) {
+                if (linha.length >= 14) {
+                    try {
+                        // Cria os objetos Time
+                        Time timeCasa = new Time(linha[7], "", ""); // Ignorando cidade e estado
+                        Time timeVisitante = new Time(linha[8], "", ""); // Ignorando cidade e estado
 
-                    // Adiciona os times ao TimeManager
-                    timeManager.adicionarTime(timeCasa);
-                    timeManager.adicionarTime(timeVisitante);
+                        // Adiciona os times ao TimeManager
+                        timeManager.adicionarTime(timeCasa);
+                        timeManager.adicionarTime(timeVisitante);
 
-                    // Cria o objeto Partida com as informações necessárias
-                    Partida partida = new Partida(
-                        linha[1], // Data
-                        timeCasa,
-                        timeVisitante,
-                        Integer.parseInt(linha[12]), // Gols Time da casa
-                        Integer.parseInt(linha[13])  // Gols Time visitante
-                    );
+                        // Cria o objeto Partida com as informações necessárias
+                        Partida partida = new Partida(
+                            linha[1], // Data
+                            timeCasa,
+                            timeVisitante,
+                            Integer.parseInt(linha[12]), // Gols Time da casa
+                            Integer.parseInt(linha[13])  // Gols Time visitante
+                        );
 
-                    // Adiciona a partida ao TimeManager
-                    timeManager.adicionarPartida(partida);
+                        // Adiciona a partida ao TimeManager
+                        timeManager.adicionarPartida(partida);
 
-                    // Atualiza a classificação com base na partida
-                    timeManager.atualizarClassificacao(partida);
-                } catch (NumberFormatException e) {
-                    System.err.println("Erro ao converter número: " + e.getMessage());
+                        // Atualiza a classificação com base na partida
+                        timeManager.atualizarClassificacao(partida);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Erro ao converter número: " + e.getMessage());
+                    }
                 }
             }
+        } catch (IOException | CsvException e) {
+            e.printStackTrace(); // Imprime o stack trace para depuração
         }
-    } catch (IOException | CsvException e) {
-        e.printStackTrace(); // Imprime o stack trace para depuração
     }
-}
 
     private static void adicionarTime(Scanner scanner, TimeManager timeManager) {
         System.out.print("Digite o nome do novo time: ");
@@ -150,5 +158,54 @@ private static void carregarDadosCSV(TimeManager timeManager, String csvFile) {
         System.out.print("Digite o nome do time a ser removido: ");
         String nome = scanner.nextLine();
         timeManager.removerTime(nome);
+    }
+
+    private static void adicionarPartida(Scanner scanner, TimeManager timeManager) {
+        System.out.print("Digite a data da nova partida (formato: yyyy-MM-dd): ");
+        String data = scanner.nextLine();
+        System.out.print("Digite o nome do time da casa: ");
+        String nomeTimeCasa = scanner.nextLine();
+        System.out.print("Digite o nome do time visitante: ");
+        String nomeTimeVisitante = scanner.nextLine();
+        System.out.print("Digite o número de gols do time da casa: ");
+        int golsCasa = scanner.nextInt();
+        System.out.print("Digite o número de gols do time visitante: ");
+        int golsVisitante = scanner.nextInt();
+        scanner.nextLine();  // Limpar o buffer
+
+        Time timeCasa = timeManager.buscarTime(nomeTimeCasa);
+        Time timeVisitante = timeManager.buscarTime(nomeTimeVisitante);
+
+        if (timeCasa != null && timeVisitante != null) {
+            Partida novaPartida = new Partida(data, timeCasa, timeVisitante, golsCasa, golsVisitante);
+            timeManager.adicionarPartida(novaPartida);
+            timeManager.atualizarClassificacao(novaPartida);
+            System.out.println("Partida adicionada com sucesso.");
+        } else {
+            System.out.println("Um ou ambos os times não foram encontrados.");
+        }
+    }
+
+    private static void removerPartida(Scanner scanner, TimeManager timeManager) {
+        System.out.print("Digite a data da partida a ser removida (formato: yyyy-MM-dd): ");
+        String data = scanner.nextLine();
+        List<Partida> partidas = timeManager.getPartidas();
+        Partida partidaParaRemover = null;
+
+        for (Partida partida : partidas) {
+            if (partida.getData().equals(data)) {
+                partidaParaRemover = partida;
+                break;
+            }
+        }
+
+        if (partidaParaRemover != null) {
+            partidas.remove(partidaParaRemover);
+            // Atualizar a classificação após a remoção da partida
+            timeManager.atualizarClassificacao(partidaParaRemover); 
+            System.out.println("Partida removida com sucesso.");
+        } else {
+            System.out.println("Partida não encontrada.");
+        }
     }
 }
