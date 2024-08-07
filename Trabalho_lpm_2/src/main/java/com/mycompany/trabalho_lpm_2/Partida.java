@@ -1,4 +1,12 @@
-/*
+
+
+
+/**
+ * Classe que representa uma partida de futebol.
+ * 
+ * Esta classe possui informações sobre a data da partida, os times que jogaram,
+ * a quantidade de gols marcados por cada time e fornece métodos para acessar essas informações.
+ *
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */

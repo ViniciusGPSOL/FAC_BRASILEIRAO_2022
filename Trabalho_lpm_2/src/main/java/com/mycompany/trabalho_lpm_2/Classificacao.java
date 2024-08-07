@@ -1,4 +1,10 @@
-/*
+
+
+/**
+ * Classe que representa a classificação de um time em um campeonato.
+ * Armazena informações como nome do time, número de vitórias, empates, derrotas,
+ * gols marcados, gols sofridos e o percentual de aproveitamento.
+ *
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */

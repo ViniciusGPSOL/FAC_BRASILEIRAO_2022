@@ -1,4 +1,11 @@
-/*
+
+
+/**
+ * Classe principal que contém o método main para executar o programa de gerenciamento de times e partidas.
+ * O programa carrega dados de um arquivo CSV, permite a interação com o usuário através de um menu interativo e realiza operações como imprimir classificação completa, imprimir lista de todas as partidas, imprimir partidas por time, exibir todos os times, adicionar novo time, editar um time existente, remover um time, adicionar nova partida, remover uma partida e sair do programa.
+ * Os dados são armazenados e gerenciados pelo objeto TimeManager, que mantém uma lista de times e partidas, além de atualizar a classificação com base nas partidas adicionadas ou removidas.
+ * O programa utiliza a biblioteca OpenCSV para ler o arquivo CSV e tratar exceções relacionadas à leitura.
+ *
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 

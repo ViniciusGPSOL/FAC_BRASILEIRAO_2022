@@ -1,4 +1,11 @@
-/*
+/**
+ * Gerenciador de Times.
+ * 
+ * Esta classe é responsável por gerenciar os times, as classificações e as partidas do campeonato.
+ * Ela possui métodos para adicionar, editar e remover times, atualizar a classificação dos times
+ * com base nas partidas, exibir a classificação atual, buscar um time pelo nome, exibir a lista de times,
+ * adicionar partidas e obter as partidas de um determinado time.
+ *
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */

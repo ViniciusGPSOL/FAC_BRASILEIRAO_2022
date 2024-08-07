@@ -1,4 +1,10 @@
-/*
+
+
+/**
+ * Classe que representa um Time.
+ * 
+ * Essa classe contém informações sobre o nome, cidade e estado de um time.
+ *
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
